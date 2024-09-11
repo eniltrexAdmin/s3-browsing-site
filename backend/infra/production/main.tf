@@ -29,4 +29,3 @@ module "default-api-gw"  {
 output "api_gateway_name" {
       value = module.default-api-gw.api_name
 }
-
