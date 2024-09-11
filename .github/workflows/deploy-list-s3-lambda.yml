@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'backend/infra/**'
+      - 'backend/list-s3-items/**'
 
 jobs:
   update-infra-production:
@@ -31,6 +31,7 @@ jobs:
           aws-region: eu-west-3
 
 
+
       - name: Terraform apply
         working-directory: backend/infra/production
         env:
@@ -38,7 +39,7 @@ jobs:
           TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
         run: |
           terraform init -backend-config="bucket=${{ secrets.TF_STATES_BUCKET }}" \
-             -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/api-gw/terraform.tfstate" \
+             -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/list-lambda/terraform.tfstate" \
              -backend-config="region=eu-west-3"
           terraform plan -out=tfplan -input=false
 #          terraform apply  -input=false tfplan

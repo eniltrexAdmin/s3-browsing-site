@@ -1,1 +1,3 @@
 Makefile
+.terraform
+.terraform.lock.hcl
