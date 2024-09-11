@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/checkout@v2
       - id: EniltrexAction
-        uses: eniltrexAdmin/install-terraform-github-action@v1.0.3
+        uses: eniltrexAdmin/install-terraform-github-action@v1.0.4
         with:
           version: '1.9.5'
           working-directory: 'install-terraform'
