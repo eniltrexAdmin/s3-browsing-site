@@ -6,7 +6,7 @@ resource "aws_api_gateway_rest_api" "api" {
 
 resource "aws_api_gateway_domain_name" "custom_domain" {
   domain_name =  local.full_domain_name
-  regional_certificate_arn = var.domain_certificate_arn
+  certificate_arn = var.domain_certificate_arn
 }
 
 
