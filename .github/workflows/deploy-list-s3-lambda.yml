@@ -11,7 +11,7 @@ jobs:
   build-go-project:
     runs-on: ubuntu-latest
     outputs:
-      artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
+      artifact-name: list-s3-program
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -65,8 +65,7 @@ jobs:
       - name: Download lambda-executable artifact
         uses: actions/download-artifact@v4
         with:
-          name: list-s3-program
-#          name: ${{needs.build-go-project.outputs.artifact-id}}
+          name: ${{needs.build-go-project.outputs.artifact-name}}
 
 
       - name: Terraform apply
