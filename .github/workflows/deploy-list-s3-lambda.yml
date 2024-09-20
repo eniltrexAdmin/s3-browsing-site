@@ -20,7 +20,8 @@ jobs:
         working-directory: ./backend/list-s3-items
         run: go get .
 
-      - name: Test with the Go CLI
+      - name: Unit testing
+        working-directory: ./backend/list-s3-items
         run: go test
 
       - name: Build Go executable
