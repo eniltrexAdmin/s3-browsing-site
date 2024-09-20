@@ -80,4 +80,4 @@ jobs:
              -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/list-lambda/terraform.tfstate" \
              -backend-config="region=eu-west-3"
           terraform plan -out=tfplan -input=false
-#          terraform apply  -input=false tfplan
+          terraform apply  -input=false tfplan
