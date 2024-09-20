@@ -13,6 +13,7 @@ resource "aws_api_gateway_method" "lambda_method" {
   resource_id   = aws_api_gateway_resource.lambda_resource.id
   http_method   = "GET"
   authorization = "NONE"
+  api_key_required = true
 }
 
 resource "aws_api_gateway_integration" "lambda_integration" {

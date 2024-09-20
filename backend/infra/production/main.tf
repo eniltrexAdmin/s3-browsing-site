@@ -8,6 +8,11 @@ variable "domain_name" {
       type=string
 }
 
+variable "be_api_key" {
+      description = "The api key to make the call to BE, with the header x-api-key"
+      type = string
+}
+
 data "aws_acm_certificate" "default" {
       domain   = "*.${var.domain_name}"
       statuses = ["ISSUED"]
@@ -24,6 +29,7 @@ module "default-api-gw"  {
       domain_name = var.domain_name
       domain_certificate_arn = data.aws_acm_certificate.default.arn
       route_53_id  = data.aws_route53_zone.default.id
+      api_gw_key = var.be_api_key
 }
 
 output "api_gateway_name" {

@@ -24,3 +24,8 @@ variable "domain_name" {
 variable "route_53_id" {
   description = "The ID of the route53 where the domain is"
 }
+
+# API Key
+variable "api_gw_key" {
+  description = "The api key to make the call to BE, with the header x-api-key"
+}
