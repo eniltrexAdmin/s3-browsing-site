@@ -34,7 +34,7 @@ variable "aws_iam_role_iam_for_lambda_arn" {
 
 
 variable "api_gateway_name" {
-
+  description = "The gateway name form the GW module"
 }
 
 variable "endpoint_path" {
@@ -46,4 +46,8 @@ variable "endpoint_path" {
 variable "domain_name" {
   description = "The domain name of the API GW"
   type=string
+}
+
+variable "aws_iam_group_deployers_name" {
+  default = ""
 }

@@ -20,6 +20,7 @@ resource "aws_iam_policy" "deployer-access-policy" {
   policy      = data.aws_iam_policy_document.deployer_access.json
 }
 
+
 resource "aws_iam_group_policy_attachment" "update-lambda-policy-attach" {
   group      = var.aws_iam_group_deployers_name
   policy_arn = aws_iam_policy.deployer-access-policy.arn

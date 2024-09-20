@@ -12,3 +12,7 @@ output "root_resource_id" {
 output "api_name" {
   value = aws_api_gateway_rest_api.api.name
 }
+
+output "domain_name" {
+  value = var.domain_name
+}
