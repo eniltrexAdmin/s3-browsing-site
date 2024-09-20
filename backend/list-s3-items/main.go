@@ -47,4 +47,5 @@ func handleRequest(ctx context.Context, input S3ListInput) (S3ListResponse, erro
 
 func main() {
 	lambda.Start(handleRequest)
+
 }
