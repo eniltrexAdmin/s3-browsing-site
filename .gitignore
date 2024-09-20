@@ -1,3 +1,4 @@
 Makefile
 .terraform
 .terraform.lock.hcl
+list-s3-program

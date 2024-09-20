@@ -13,10 +13,8 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - uses: actions/checkout@v1
 
 
-      - uses: actions/checkout@v4
       - id: EniltrexAction
         uses: eniltrexAdmin/install-terraform-github-action@v1.0.4
         with:

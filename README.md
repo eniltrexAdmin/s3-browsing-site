@@ -16,6 +16,8 @@ deployed, but it assumes an static infra which is the existence of the API GW.
 
 There's the map to the domain.
 
+Infra doesn't have "environments" it's all in production.
+
 
 FE pipeline is independent and I havent started yet.
 

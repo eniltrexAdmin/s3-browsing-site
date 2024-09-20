@@ -7,18 +7,45 @@ on:
       - 'backend/list-s3-items/**'
 
 jobs:
-  update-infra-production:
+  build-go-project:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Compile GO code and create executable
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        working-directory: ./backend/list-s3-items
+        run: go get .
+
+      - name: Test with the Go CLI
+        run: go test
+
+      - name: Build Go executable
+        working-directory: ./backend/list-s3-items
+        run: go build -o ../../list-s3-program
+
+      - name: Upload executable as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: lambda-executable
+          path: backend/list-s3-program
+
+
+
+  update-infra-production:
+    runs-on: ubuntu-latest
+    needs: build-go-project # Ensure the build job completes first
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - uses: actions/checkout@v1
 
 
-      - uses: actions/checkout@v4
       - id: EniltrexAction
-        uses: eniltrexAdmin/install-terraform-github-action@v1.0.3
+        uses: eniltrexAdmin/install-terraform-github-action@v1.0.4
         with:
           version: '1.9.5'
           working-directory: 'install-terraform'
@@ -30,7 +57,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_TERRAFORM_KEY_SECRET }}
           aws-region: eu-west-3
 
-# build lamda
+      - name: Download lambda-executable artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: list-s3-program
+
 
       - name: Terraform apply
         working-directory: backend/infra/production

@@ -10,10 +10,9 @@ variable "lambda-name" {
   default     = "golang-skeleton"
 }
 
-variable "lambda-file-full-path" {
+variable "lambda_file_full_path" {
   description = "The relative full path from the directory where the terraform apply command is being executed."
   type = string
-  default = "../modules/go-project-lambda/dummy-go.zip"
 }
 
 variable "executable-file" {

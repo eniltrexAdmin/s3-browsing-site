@@ -49,4 +49,6 @@ module "s3-list-lambda" {
   aws_iam_role_iam_for_lambda_arn = data.aws_iam_role.iam_for_lambda.arn
   aws_iam_group_deployers_name = data.aws_iam_group.deployers.group_name
   domain_name = data.terraform_remote_state.api_gateway.outputs.api_gw_domain_name
+
+  lambda_file_full_path = "../../../list-s3-program"
 }
