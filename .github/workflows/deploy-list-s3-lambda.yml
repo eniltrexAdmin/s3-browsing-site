@@ -69,7 +69,7 @@ jobs:
 
 
       - name: Terraform apply
-        working-directory: backend/infra/production
+        working-directory: backend/list-s3-items/infra/production
         env:
           TF_VAR_bucket_name: ${{ secrets.BUCKET_NAME }}
           TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
