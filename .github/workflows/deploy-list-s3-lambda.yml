@@ -29,10 +29,10 @@ jobs:
         run: go build -o ../../list-s3-program
 
       - name: Upload executable as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: lambda-executable
-          path: backend/list-s3-program
+          name: list-s3-program
+          path: list-s3-program
 
 
 
