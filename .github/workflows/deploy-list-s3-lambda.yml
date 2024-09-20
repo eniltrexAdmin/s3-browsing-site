@@ -5,7 +5,6 @@ on:
       - main
     paths:
       - 'backend/list-s3-items/**'
-      - '.github/workflows/deploy-list-s3-lambda.yml'
 
 jobs:
   build-go-project:
