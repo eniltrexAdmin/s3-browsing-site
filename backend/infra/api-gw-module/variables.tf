@@ -29,3 +29,13 @@ variable "route_53_id" {
 variable "api_gw_key" {
   description = "The api key to make the call to BE, with the header x-api-key"
 }
+
+
+variable "lambdas" {
+  description = "List of Lambda configurations"
+  type = list(object({
+    function_name = string  # Name of the Lambda function
+    endpoint_path = string  # The API Gateway path for the Lambda
+    http_method   = string  # The HTTP method (e.g., GET, POST)
+  }))
+}

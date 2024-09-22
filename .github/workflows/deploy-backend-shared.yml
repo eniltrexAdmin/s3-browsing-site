@@ -1,14 +1,14 @@
 name: Apply terraform changes to PRODUCTION on GW
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'backend/infra/**'
+  workflow_run:
+    workflows: ["deploy-list-lambda"]
+    types:
+      - completed
 
 jobs:
   update-infra-production:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -35,6 +35,8 @@ jobs:
           TF_VAR_bucket_name: ${{ secrets.BUCKET_NAME }}
           TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
           TF_VAR_be_api_key: ${{ secrets.BE_API_KEY }}
+          TF_VAR_list_lambda_state_bucketL: ${{ secrets.TF_STATES_BUCKET }}
+          TF_VAR_list_lambda_state_key: ${{ secrets.BUCKET_NAME}}-s3-browsing/list-lambda/terraform.tfstate
         run: |
           terraform init -backend-config="bucket=${{ secrets.TF_STATES_BUCKET }}" \
              -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/api-gw/terraform.tfstate" \
