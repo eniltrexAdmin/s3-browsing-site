@@ -1,4 +1,4 @@
-Project that deploys an app to rowse the content of an s3.
+Project that deploys an app to browse the content of an s3.
 
 FE is secured with basic authentication.
 
@@ -14,12 +14,12 @@ Put the graph here with better explanation.
 The devops side is that whenever the code in the lambdas change they are being
 deployed, but it assumes an static infra which is the existence of the API GW.
 
-There's the map to the domain.
-
 Infra doesn't have "environments" it's all in production.
 
 
-FE pipeline is independent and I havent started yet.
+FE pipeline is independent and I havet started yet.
+
+![Architecture Diagram](architecture-1.png)
 
 
 
