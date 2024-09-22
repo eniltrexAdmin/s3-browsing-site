@@ -35,8 +35,8 @@ jobs:
         name: Upload executable as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: list-s3-program
-          path: list-s3-program
+          name: bootstrap
+          path: bootstrap
 
 
 
