@@ -35,6 +35,7 @@ variable "lambdas" {
   description = "List of Lambda configurations"
   type = list(object({
     function_name = string  # Name of the Lambda function
+    lambda_invoke_arn = string # The invocation URL for an API GW
     endpoint_path = string  # The API Gateway path for the Lambda
     http_method   = string  # The HTTP method (e.g., GET, POST)
   }))

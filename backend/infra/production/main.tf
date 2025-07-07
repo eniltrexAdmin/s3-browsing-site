@@ -52,6 +52,7 @@ module "default-api-gw"  {
       api_gw_key = var.be_api_key
       lambdas = [{
             function_name = data.terraform_remote_state.lambda_1_remote_state.outputs.lambda_function_name
+            lambda_invoke_arn = data.terraform_remote_state.lambda_1_remote_state.outputs.lambda_invoke_arn
             endpoint_path = "list-s3"
             http_method   = "GET"
       }]

@@ -34,3 +34,7 @@ module "s3-list-lambda" {
 output "lambda_function_name" {
   value = module.s3-list-lambda.lambda_function_name
 }
+
+output "lambda_invoke_arn" {
+  value = module.s3-list-lambda.lambda_invoke_arn
+}
