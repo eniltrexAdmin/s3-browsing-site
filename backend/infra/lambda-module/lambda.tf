@@ -19,6 +19,14 @@ resource "aws_lambda_function" "default" {
   environment {
     variables = var.lambda_env_variables
   }
+
+  # add a triggers block to force update on checksum change
+  lifecycle {
+    create_before_destroy = true
+  }
+  # Trick Terraform to redeploy when binary changes:
+  # (using an additional argument with checksum)
+  source_code_hash = data.archive_file.lambda.output_base64sha256
 }
 
 

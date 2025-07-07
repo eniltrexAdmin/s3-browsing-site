@@ -47,3 +47,10 @@ aws iam attach-role-policy \
 ```
 $aws apigateway update-account --patch-operations op=replace,path=/cloudwatchRoleArn,value="arn:aws:iam::526774264214:role/APIGatewayCloudWatchLogsRole"
 ```
+
+
+To test lambda:
+
+aws apigateway get-resources --rest-api-id x3xecogfjg (and get teh resource ID)
+
+aws apigateway test-invoke-method   --rest-api-id x3xecogfjg   --resource-id  303gby   --http-method GET   --path-with-query-string "/list-s3"   --body '{"bucket":"YOUR_BUCKET","key":"YOUR_PREFIX"}'
