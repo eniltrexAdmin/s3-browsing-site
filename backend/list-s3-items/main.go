@@ -1,4 +1,4 @@
-package list_s3_items
+package main
 
 import (
 	"context"

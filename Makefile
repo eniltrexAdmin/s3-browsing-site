@@ -4,7 +4,7 @@ list-s3-lambda-test:
 	cd backend/list-s3-items; go test ./...;
 
 list-s3-lambda-build:
-	cd backend/list-s3-items; GOOS=linux GOARCH=arm64 go build -o ../../bootstrap
+	cd backend/list-s3-items; GOOS=linux GOARCH=amd64 go build -o ../../bootstrap
 
 list-lambda-plan:
 	set -a; source .env; cd backend/list-s3-items/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
