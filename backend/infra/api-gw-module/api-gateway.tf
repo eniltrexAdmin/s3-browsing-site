@@ -32,12 +32,13 @@ resource "aws_api_gateway_usage_plan" "browsing_s3_usage_plan" {
   name = "Browsing ${var.bucket_name} site key"
   api_stages {
     api_id = aws_api_gateway_rest_api.api.id
-    stage  = "prod"
+    stage  = aws_api_gateway_deployment.api_deployment.stage_name
   }
   throttle_settings {
     burst_limit = 100
     rate_limit  = 50
   }
+  depends_on = [aws_api_gateway_deployment.api_deployment]
 }
 
 # Usage Plan Key
