@@ -3,3 +3,4 @@
 bootstrap
 list-s3-program.zip
 .env
+curl-test.sh

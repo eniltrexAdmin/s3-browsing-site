@@ -36,6 +36,19 @@ api-gw-apply:
         -backend-config="region=$$TF_BACKEND_REGION"; \
 		terraform apply
 
+api-gw-output:
+	set -a; source .env; cd backend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_API_GW" \
+        -backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform output
+
+api-gw-test:
+	curl -X GET \
+	  -H "x-api-key: YOUR_API_KEY" \
+	  -H "Content-Type: application/json" \
+	  -d '{"bucket":"my-bucket-name","key":"optional/prefix/"}' \
+	  https://x3xecogfjg.execute-api.eu-west-3.amazonaws.com/prod/list-s3
 
 
 

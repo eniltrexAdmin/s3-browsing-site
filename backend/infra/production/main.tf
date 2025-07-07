@@ -58,3 +58,6 @@ module "default-api-gw"  {
       }]
 }
 
+output "api_url" {
+      value = module.default-api-gw.api_url
+}

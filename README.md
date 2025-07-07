@@ -22,3 +22,28 @@ FE pipeline is independent and I havet started yet.
 
 
 
+Doing this to set logs in CW:
+
+```
+aws iam create-role --role-name APIGatewayCloudWatchLogsRole \
+  --assume-role-policy-document '{
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": {"Service": "apigateway.amazonaws.com"},
+      "Action": "sts:AssumeRole"
+    }]
+  }'
+```
+
++
+
+```
+aws iam attach-role-policy \
+  --role-name APIGatewayCloudWatchLogsRole \
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+```
+
+```
+$aws apigateway update-account --patch-operations op=replace,path=/cloudwatchRoleArn,value="arn:aws:iam::526774264214:role/APIGatewayCloudWatchLogsRole"
+```
