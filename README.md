@@ -9,8 +9,6 @@ The infra for BE is just 2 lambdas.
 Pipeline is to deploy first the API GW, then the two lambdas depending on that
 reusing the same lambda module. Executed by github.
 
-Put the graph here with better explanation.
-
 The devops side is that whenever the code in the lambdas change they are being
 deployed, but it assumes an static infra which is the existence of the API GW.
 

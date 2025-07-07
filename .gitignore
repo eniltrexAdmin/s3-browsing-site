@@ -1,5 +1,5 @@
-Makefile
 .terraform
 .terraform.lock.hcl
 bootstrap
 list-s3-program.zip
+.env

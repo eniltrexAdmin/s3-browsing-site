@@ -13,7 +13,7 @@ resource "aws_api_gateway_resource" "lambda_resource" {
 resource "aws_api_gateway_method" "lambda_method" {
   for_each      = { for lambda in var.lambdas : lambda.endpoint_path => lambda }
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.lambda_resource.id
+  resource_id   = aws_api_gateway_resource.lambda_resource[each.key].id
   http_method   = each.value.http_method
   authorization = "NONE"
   api_key_required = true
@@ -22,8 +22,8 @@ resource "aws_api_gateway_method" "lambda_method" {
 resource "aws_api_gateway_integration" "lambda_integration" {
   for_each    = { for lambda in var.lambdas : lambda.endpoint_path => lambda }
   rest_api_id             = aws_api_gateway_rest_api.api.id
-  resource_id             = aws_api_gateway_resource.lambda_resource.id
-  http_method             = aws_api_gateway_method.lambda_method.http_method
+  resource_id             = aws_api_gateway_resource.lambda_resource[each.key].id
+  http_method             = aws_api_gateway_method.lambda_method[each.key].http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = data.aws_lambda_function.lambda[each.value.function_name].arn
@@ -41,7 +41,7 @@ resource "aws_lambda_permission" "api_gateway_lambda" {
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = "prod"
-  depends_on = [for method in aws_api_gateway_method.lambda_method : method]
+  depends_on =  [aws_api_gateway_method.lambda_method]
 
   lifecycle {
     create_before_destroy = true

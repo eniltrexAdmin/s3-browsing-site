@@ -1,0 +1,43 @@
+SHELL=/bin/bash
+
+list-s3-lambda-test:
+	cd backend/list-s3-items; go test ./...;
+
+list-s3-lambda-build:
+	cd backend/list-s3-items; GOOS=linux GOARCH=arm64 go build -o ../../bootstrap
+
+list-lambda-plan:
+	set -a; source .env; cd backend/list-s3-items/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_LIST_LAMBDA" \
+        -backend-config="region=eu-west-3"; \
+		terraform plan
+
+list-lambda-apply:
+	set -a; source .env; cd backend/list-s3-items/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_LIST_LAMBDA" \
+        -backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform apply
+
+
+
+api-gw-plan:
+	set -a; source .env;  cd backend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init -reconfigure \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_API_GW" \
+        -backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform plan
+
+api-gw-apply:
+	set -a; source .env; cd backend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_API_GW" \
+        -backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform apply
+
+
+
+
+generate-pre-signed-url:
+	export AWS_PROFILE=eniltrex-terraform; aws s3 presign s3://wrestling-stuff/thunders/HH2016D_PeeWee_Marco_MASTER.webm --expires-in 3600

@@ -29,7 +29,7 @@ variable "list_lambda_state_bucket" {
 }
 
 variable "list_lambda_state_key" {
-      description = "tHe path where the API GW state is"
+      description = "The path where the API GW state is"
 }
 
 data "terraform_remote_state" "lambda_1_remote_state" {
@@ -54,6 +54,6 @@ module "default-api-gw"  {
             function_name = data.terraform_remote_state.lambda_1_remote_state.outputs.lambda_function_name
             endpoint_path = "list-s3"
             http_method   = "GET"
-      },{}]
+      }]
 }
 
