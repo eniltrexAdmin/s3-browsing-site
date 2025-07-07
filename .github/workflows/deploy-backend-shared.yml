@@ -4,6 +4,7 @@ on:
     workflows: ["deploy-list-lambda"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   update-infra-production:
