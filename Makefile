@@ -1,8 +1,5 @@
 SHELL=/bin/bash
 
-list-lambda-test:
-	cd backend/list-s3-items; go test ./...;
-
 list-lambda-build:
 	cd backend/list-s3-items; CGO_ENABLED=0  GOOS=linux GOARCH=amd64 go build -o ../../bootstrap
 
@@ -23,6 +20,22 @@ list-lambda-apply:
         -backend-config="key=$$TF_BACKEND_KEY_LIST_LAMBDA" \
         -backend-config="region=$$TF_BACKEND_REGION"; \
 		terraform apply
+
+
+list-lambda-plan:
+	set -a; source .env; cd backend/pre-sign-url/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_PRESIGN_LAMBDA" \
+        -backend-config="region=eu-west-3"; \
+		terraform plan
+
+list-lambda-apply:
+	set -a; source .env; cd backend/pre-sign-url/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+        -backend-config="bucket=$$TF_BACKEND_BUCKET" \
+        -backend-config="key=$$TF_BACKEND_KEY_PRESIGN_LAMBDA" \
+        -backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform apply
+
 
 api-gw-plan:
 	set -a; source .env;  cd backend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init -reconfigure \
@@ -59,9 +72,14 @@ presign-lambda-prod-logs:
 list-lambda-prod-logs:
 	cd hardcoded-makefile-do-not-git; make list-lambda-prod-logs
 
-api-gw-test-direct:
+list-lambda-test-direct:
+	cd hardcoded-makefile-do-not-git; make list-lambda-prod-test
+
+presign-lambda-test-direct:
+	cd hardcoded-makefile-do-not-git; make presign-lambda-prod-test
+
+list-lambda-api-gw-test-direct:
 	cd hardcoded-makefile-do-not-git; make api-gw-test-direct
 
-
-api-gw-test-curl:
+list-lambda-api-gw-test-curl:
 	cd hardcoded-makefile-do-not-git; make api-gw-test-curl
