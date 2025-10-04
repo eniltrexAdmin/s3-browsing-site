@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -20,10 +21,18 @@ type S3ListResponse struct {
 	Items []string `json:"items"`
 }
 
-func handleRequest(ctx context.Context, input S3ListInput) (S3ListResponse, error) {
+func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (S3ListResponse, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
+	}
+
+	log.Printf("Full request body: %s", event.Body)
+	log.Printf("Full event: %+v", event)
+
+	input := S3ListInput{
+		Bucket: event.QueryStringParameters["bucket"],
+		Key:    event.QueryStringParameters["key"],
 	}
 
 	inputJson, _ := json.Marshal(input)
