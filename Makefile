@@ -53,3 +53,12 @@ api-gw-test:
 
 
 
+list-lambda-prod-logs:
+	cd hardcoded-makefile-do-not-git; make list-lambda-prod-logs
+
+api-gw-test-direct:
+	cd hardcoded-makefile-do-not-git; make api-gw-test-direct
+
+
+api-gw-test-curl:
+	cd hardcoded-makefile-do-not-git; make api-gw-test-curl
