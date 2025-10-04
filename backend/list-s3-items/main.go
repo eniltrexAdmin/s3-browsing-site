@@ -21,7 +21,7 @@ type S3ListResponse struct {
 	Items []string `json:"items"`
 }
 
-func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (S3ListResponse, error) {
+func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
@@ -43,19 +43,38 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (S3
 
 	// Call the ListObjectsV2 API
 	output, err := client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
-		Bucket: aws.String(input.Bucket),
-		Prefix: aws.String(input.Key),
+		Bucket:    aws.String(input.Bucket),
+		Prefix:    aws.String(input.Key),
+		Delimiter: aws.String("/"), // important: lists only one level deep
 	})
 	if err != nil {
-		return S3ListResponse{}, fmt.Errorf("failed to list objects: %v", err)
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Body:       fmt.Sprintf("failed to list objects: %v", err),
+		}, nil
 	}
 
 	var items []string
 	for _, obj := range output.Contents {
 		items = append(items, *obj.Key)
 	}
+	resp := S3ListResponse{Items: items}
 
-	return S3ListResponse{Items: items}, nil
+	body, err := json.Marshal(resp)
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Body:       fmt.Sprintf("failed to marshal response: %v", err),
+		}, nil
+	}
+
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       string(body),
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+	}, nil
 }
 
 func main() {
