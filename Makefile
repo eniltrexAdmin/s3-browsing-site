@@ -1,10 +1,13 @@
 SHELL=/bin/bash
 
-list-s3-lambda-test:
+list-lambda-test:
 	cd backend/list-s3-items; go test ./...;
 
-list-s3-lambda-build:
-	cd backend/list-s3-items; GOOS=linux GOARCH=amd64 go build -o ../../bootstrap
+list-lambda-build:
+	cd backend/list-s3-items; CGO_ENABLED=0  GOOS=linux GOARCH=amd64 go build -o ../../bootstrap
+
+
+
 
 list-lambda-plan:
 	set -a; source .env; cd backend/list-s3-items/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
@@ -19,8 +22,6 @@ list-lambda-apply:
         -backend-config="key=$$TF_BACKEND_KEY_LIST_LAMBDA" \
         -backend-config="region=$$TF_BACKEND_REGION"; \
 		terraform apply
-
-
 
 api-gw-plan:
 	set -a; source .env;  cd backend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init -reconfigure \
@@ -52,5 +53,3 @@ api-gw-test:
 
 
 
-generate-pre-signed-url:
-	export AWS_PROFILE=eniltrex-terraform; aws s3 presign s3://wrestling-stuff/thunders/HH2016D_PeeWee_Marco_MASTER.webm --expires-in 3600

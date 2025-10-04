@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -24,6 +25,9 @@ func handleRequest(ctx context.Context, input S3ListInput) (S3ListResponse, erro
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
+
+	inputJson, _ := json.Marshal(input)
+	log.Printf("Lambda received input: %s", string(inputJson))
 
 	// Create S3 client
 	client := s3.NewFromConfig(cfg)

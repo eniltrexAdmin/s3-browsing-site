@@ -20,7 +20,13 @@ FE pipeline is independent and I havet started yet.
 ![Architecture Diagram](architecture-1.png)
 
 
+## DEcisions
 
+I am keeping woth zip files and not Docker images for the following reasons:
+1. I already had it
+2. I need to deal with ECR in the main infra probably.
+3. A big advantage is to be able to test in local the exact same thing, but it's not really useful, I am not respecting clean architecture, I'm coupled with ifnra in s3 etc, it's no use to test in local (also I could test without docker)
+4. The other big advantage is the pipeline, fast cycle, deploy etc, but that's not going to be the case here, i will probably forget about it once it's deployed once.
 
 Doing this to set logs in CW:
 
