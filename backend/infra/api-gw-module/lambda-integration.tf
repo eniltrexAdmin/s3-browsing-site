@@ -59,3 +59,65 @@ resource "aws_api_gateway_base_path_mapping" "path_mapping" {
 output "api_url" {
   value = { for lambda in var.lambdas : lambda.function_name => "${aws_api_gateway_deployment.api_deployment.invoke_url}/${lambda.endpoint_path}" }
 }
+
+
+resource "aws_api_gateway_method" "lambda_cors_options" {
+  for_each    = { for lambda in var.lambdas : lambda.endpoint_path => lambda }
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.lambda_resource[each.key].id
+  http_method = "OPTIONS"
+
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "lambda_cors_options" {
+  for_each = { for lambda in var.lambdas : lambda.endpoint_path => lambda }
+
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_resource.lambda_resource[each.key].id
+  http_method             = aws_api_gateway_method.lambda_cors_options[each.key].http_method
+  type                    = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "lambda_cors_options" {
+  for_each = { for lambda in var.lambdas : lambda.endpoint_path => lambda }
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.lambda_resource[each.key].id
+  http_method = aws_api_gateway_method.lambda_cors_options[each.key].http_method
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+
+
+resource "aws_api_gateway_integration_response" "lambda_cors_options" {
+  for_each = { for lambda in var.lambdas : lambda.endpoint_path => lambda }
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.lambda_resource[each.key].id
+  http_method = aws_api_gateway_method.lambda_cors_options[each.key].http_method
+  status_code = aws_api_gateway_method_response.lambda_cors_options[each.key].status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = ""
+  }
+}
