@@ -1,0 +1,80 @@
+name: deploy-list-lambda
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/presign-url/**'
+      - '.github/workflows/deploy-presign-lambda.yml'
+
+jobs:
+  build-go-project:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-name: bootstrap
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install go language
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        working-directory: ./backend/presign-url
+        run: go get .
+
+      - name: Unit testing
+        working-directory: ./backend/presign-url
+        run: go test
+
+      - name: Build Go executable
+        working-directory: ./backend/list-s3-items
+        run:  GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ../../bootstrap
+
+      - id: upload-artifact
+        name: Upload executable as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-sign-url
+          path: pre-sign-url
+
+
+
+  deploy-presign-lambda:
+    runs-on: ubuntu-latest
+    needs: build-go-project
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+
+
+      - id: EniltrexAction
+        uses: eniltrexAdmin/install-terraform-github-action@v1.0.4
+        with:
+          version: '1.9.5'
+          working-directory: 'install-terraform'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_TERRAFORM_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_TERRAFORM_KEY_SECRET }}
+          aws-region: eu-west-3
+
+      - name: Download lambda-executable artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{needs.build-go-project.outputs.artifact-name}}
+
+
+      - name: Terraform apply
+        working-directory: backend/presign-url/infra/production
+        env:
+          TF_VAR_bucket_name: ${{ secrets.BUCKET_NAME }}
+        run: |
+          terraform init -backend-config="bucket=${{ secrets.TF_STATES_BUCKET }}" \
+             -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/list-lambda/terraform.tfstate" \
+             -backend-config="region=eu-west-3"
+          terraform plan -out=tfplan -input=false
+          terraform apply -input=false tfplan
