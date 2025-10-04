@@ -81,7 +81,10 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 		StatusCode: 200,
 		Body:       string(body),
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                 "application/json",
+			"Access-Control-Allow-Origin":  "*",
+			"Access-Control-Allow-Methods": "GET,OPTIONS",
+			"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key",
 		},
 	}, nil
 }

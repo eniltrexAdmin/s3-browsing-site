@@ -44,7 +44,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   depends_on =  [aws_api_gateway_method.lambda_method]
 
   triggers = {
-    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.api))
+    redeployment = timestamp()
   }
 
   lifecycle {
@@ -63,6 +63,7 @@ resource "aws_api_gateway_base_path_mapping" "path_mapping" {
 output "api_url" {
   value = { for lambda in var.lambdas : lambda.function_name => "${aws_api_gateway_deployment.api_deployment.invoke_url}/${lambda.endpoint_path}" }
 }
+
 
 
 resource "aws_api_gateway_method" "lambda_cors_options" {
