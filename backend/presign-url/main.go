@@ -40,7 +40,7 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}, func(opts *s3.PresignOptions) {
-		opts.Expires = time.Duration(lifetimeSecs * int64(time.Second))
+		opts.Expires = time.Duration(3600 * int64(time.Second))
 	})
 	if err != nil {
 		log.Printf("Couldn't get a presigned request to get %v:%v. Here's why: %v\n",

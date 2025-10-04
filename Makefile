@@ -6,7 +6,8 @@ list-lambda-test:
 list-lambda-build:
 	cd backend/list-s3-items; CGO_ENABLED=0  GOOS=linux GOARCH=amd64 go build -o ../../bootstrap
 
-
+pre-sign-lambda-build:
+	cd backend/pre-sign-url; CGO_ENABLED=0  GOOS=linux GOARCH=amd64 go build -o ../../pre-sign-url
 
 
 list-lambda-plan:
@@ -52,6 +53,8 @@ api-gw-test:
 	  https://x3xecogfjg.execute-api.eu-west-3.amazonaws.com/prod/list-s3
 
 
+presign-lambda-prod-logs:
+	cd hardcoded-makefile-do-not-git; make presign-lambda-prod-logs
 
 list-lambda-prod-logs:
 	cd hardcoded-makefile-do-not-git; make list-lambda-prod-logs
