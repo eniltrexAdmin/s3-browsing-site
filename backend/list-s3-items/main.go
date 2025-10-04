@@ -43,9 +43,9 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 
 	// Call the ListObjectsV2 API
 	output, err := client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
-		Bucket:    aws.String(input.Bucket),
-		Prefix:    aws.String(input.Key),
-		Delimiter: aws.String("/"), // important: lists only one level deep
+		Bucket: aws.String(input.Bucket),
+		Prefix: aws.String(input.Key),
+		//Delimiter: aws.String("/"), // important: lists only one level deep
 	})
 	if err != nil {
 		return events.APIGatewayProxyResponse{
@@ -55,6 +55,15 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 	}
 
 	var items []string
+	// Files
+	//for _, obj := range output.Contents {
+	//	items = append(items, strings.TrimPrefix(*obj.Key, prefix))
+	//}
+	//
+	//// "Subdirectories"
+	//for _, cp := range output.CommonPrefixes {
+	//	items = append(items, strings.TrimPrefix(*cp.Prefix, prefix))
+	//}
 	for _, obj := range output.Contents {
 		items = append(items, *obj.Key)
 	}

@@ -43,6 +43,10 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   stage_name  = "prod"
   depends_on =  [aws_api_gateway_method.lambda_method]
 
+  triggers = {
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.api))
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -69,6 +73,7 @@ resource "aws_api_gateway_method" "lambda_cors_options" {
   http_method = "OPTIONS"
 
   authorization = "NONE"
+  api_key_required  = false
 }
 
 resource "aws_api_gateway_integration" "lambda_cors_options" {
