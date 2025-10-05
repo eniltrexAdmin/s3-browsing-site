@@ -30,6 +30,7 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	key := event.QueryStringParameters["key"]
 
 	if bucket == "" || key == "" {
+		log.Printf("bucket and key query parameters are required")
 		return errorResponse(http.StatusBadRequest, "bucket and key query parameters are required"), nil
 	}
 
@@ -45,6 +46,7 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	if err != nil {
 		log.Printf("Couldn't get a presigned request to get %v:%v. Here's why: %v\n",
 			bucket, key, err)
+		return errorResponse(http.StatusInternalServerError, err.Error()), nil
 	}
 
 	respBody, err := json.Marshal(PresignResponse{URL: psReq.URL})
