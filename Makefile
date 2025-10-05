@@ -72,7 +72,14 @@ presign-lambda-test-lambda:
 	cd hardcoded-makefile-do-not-git; make presign-lambda-test-lambda
 
 list-lambda-api-gw-test-direct:
-	cd hardcoded-makefile-do-not-git; make api-gw-test-direct
+	cd hardcoded-makefile-do-not-git; make list-lambda-api-gw-test-direct
+
+presign-lambda-api-gw-test-direct:
+	cd hardcoded-makefile-do-not-git; make presign-lambda-api-gw-test-direct
+
 
 list-lambda-api-gw-test-curl:
-	cd hardcoded-makefile-do-not-git; make api-gw-test-curl
+	cd hardcoded-makefile-do-not-git; make list-lambda-api-gw-test-curl
+
+presign-lambda-api-gw-test-curl:
+	cd hardcoded-makefile-do-not-git; make presign-lambda-api-gw-test-curl
