@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "lambda_s3_access_policy" {
-  name        = "${var.bucket_name}-s3-access-policy"
+  name        = "${var.lambda_name}-s3-access-policy"
   description = "Policy to allow Lambda function to access S3 bucket"
 
   policy = jsonencode({
