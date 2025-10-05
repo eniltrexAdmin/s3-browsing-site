@@ -81,10 +81,10 @@ frontend-output:
 		-backend-config="region=$$TF_BACKEND_REGION"; \
 		terraform output
 
-presign-lambda-prod-logs:
+presign-lambda-logs:
 	cd hardcoded-makefile-do-not-git; make presign-lambda-prod-logs
 
-list-lambda-prod-logs:
+list-lambda-logs:
 	cd hardcoded-makefile-do-not-git; make list-lambda-prod-logs
 
 list-lambda-test-lambda:
@@ -105,3 +105,6 @@ list-lambda-api-gw-test-curl:
 
 presign-lambda-api-gw-test-curl:
 	cd hardcoded-makefile-do-not-git; make presign-lambda-api-gw-test-curl
+
+frontend-cf-logs:
+	cd hardcoded-makefile-do-not-git; make cf-logs

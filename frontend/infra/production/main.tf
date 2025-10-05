@@ -141,6 +141,12 @@ resource "aws_lambda_function" "basic_auth" {
   runtime          = "nodejs18.x"
   filename         = data.archive_file.basic_auth_zip.output_path
   publish          = true
+
+  source_code_hash = filebase64sha256(data.archive_file.basic_auth_zip.output_path)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # ──────────────────────────────────────────────
