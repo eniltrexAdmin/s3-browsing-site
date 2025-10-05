@@ -59,6 +59,28 @@ api-gw-output:
 		terraform output
 
 
+frontend-plan:
+	set -a; source .env; cd frontend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+		-backend-config="bucket=$$TF_BACKEND_BUCKET" \
+		-backend-config="key=$$TF_BACKEND_KEY_FRONTEND_SITE" \
+		-backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform plan
+
+frontend-apply:
+	set -a; source .env; cd frontend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+		-backend-config="bucket=$$TF_BACKEND_BUCKET" \
+		-backend-config="key=$$TF_BACKEND_KEY_FRONTEND_SITE" \
+		-backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform apply
+
+
+frontend-output:
+	set -a; source .env; cd frontend/infra/production; export AWS_PROFILE=eniltrex-terraform; terraform init \
+		-backend-config="bucket=$$TF_BACKEND_BUCKET" \
+		-backend-config="key=$$TF_BACKEND_KEY_FRONTEND_SITE" \
+		-backend-config="region=$$TF_BACKEND_REGION"; \
+		terraform output
+
 presign-lambda-prod-logs:
 	cd hardcoded-makefile-do-not-git; make presign-lambda-prod-logs
 

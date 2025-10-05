@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Video viewer</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .info { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<div class="info">
+    <a href="index.html">← Back to list</a>
+</div>
+
+<div id="status">Loading...</div>
+
+<div id="video-wrap" style="display:none;">
+    <video id="player" width="800" controls>
+        <source id="player-src" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<script>
+    const PRESIGN_API = "https://x3xecogfjg.execute-api.eu-west-3.amazonaws.com/prod/presign";
+    const API_KEY = "__API_KEY__";
+
+    function getQueryParams() {
+        const q = new URLSearchParams(window.location.search);
+        return { bucket: q.get('bucket'), key: q.get('key') };
+    }
+
+    function extFromKey(key) {
+        if (!key) return '';
+        const dot = key.lastIndexOf('.');
+        return dot === -1 ? '' : key.slice(dot+1).toLowerCase();
+    }
+
+    async function fetchPresignedUrl(bucket, key) {
+        const url = `${PRESIGN_API}?bucket=${encodeURIComponent(bucket)}&key=${encodeURIComponent(key)}`;
+        const res = await fetch(url, {
+            method: "GET",
+            headers: {
+                "x-api-key": API_KEY,
+                "Content-Type": "application/json"
+            }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+    }
+
+    (async function init() {
+        const { bucket, key } = getQueryParams();
+        const status = document.getElementById('status');
+        if (!bucket || !key) {
+            status.textContent = "Missing bucket or key in URL.";
+            return;
+        }
+
+        const ext = extFromKey(key);
+        if (!(ext === 'mp4' || ext === 'webm')) {
+            status.textContent = `Unsupported file type .${ext}. Only .mp4 or .webm supported.`;
+            return;
+        }
+
+        status.textContent = `Requesting presigned URL for ${key} ...`;
+        try {
+            const data = await fetchPresignedUrl(bucket, key);
+            const presigned = data.url;
+            if (!presigned) {
+                console.error("Presign response:", data);
+                throw new Error("No presigned URL in API response");
+            }
+
+            // Set source and show player
+            const playerWrap = document.getElementById('video-wrap');
+            const src = document.getElementById('player-src');
+            src.src = presigned;
+            // set MIME type corresponding to extension:
+            src.type = (ext === 'webm') ? 'video/webm' : 'video/mp4';
+            const player = document.getElementById('player');
+            // reload the <video> element so it picks up new source
+            player.load();
+
+            status.style.display = 'none';
+            playerWrap.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            status.textContent = "Error getting presigned URL: " + err.message;
+        }
+    })();
+</script>
+</body>
+</html>

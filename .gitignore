@@ -5,3 +5,4 @@ bootstrap
 list-s3-program.zip
 .env
 hardcoded-makefile-do-not-git
+*.zip

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>S3 Directory Browser</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 5px 0; }
+        a { text-decoration: none; color: blue; cursor: pointer; }
+    </style>
+</head>
+<body>
+<h1>S3 Directory Browser</h1>
+
+<div>
+    <label>Bucket:</label>
+    <input type="text" id="bucket" value="wrestling-stuff">
+    <button onclick="listS3()">List</button>
+</div>
+
+<h2>Contents:</h2>
+<ul id="items"></ul>
+
+<script>
+    const API_URL = "https://x3xecogfjg.execute-api.eu-west-3.amazonaws.com/prod/list-s3";
+    const API_KEY = "__API_KEY__";
+
+    async function listS3(key = "") {
+        const bucket = document.getElementById("bucket").value;
+        let url = `${API_URL}?bucket=${encodeURIComponent(bucket)}`;
+        if (key) url += `&key=${encodeURIComponent(key)}`;
+
+        try {
+            const res = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "x-api-key": API_KEY,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+            const data = await res.json();
+            renderItems(data.items || [], key);
+        } catch (err) {
+            console.error(err);
+            alert("Error fetching S3 data: " + err.message);
+        }
+    }
+
+    function renderItems(items, currentKey) {
+        const ul = document.getElementById("items");
+        ul.innerHTML = "";
+
+        if (currentKey) {
+            const li = document.createElement("li");
+            li.innerHTML = `<a onclick="listS3('')">🔙 .. (go up)</a>`;
+            ul.appendChild(li);
+        }
+
+        items.forEach(item => {
+            const li = document.createElement("li");
+            const fullKey = (currentKey ? currentKey : "") + item;
+            const lower = item.toLowerCase();
+
+            if (item.endsWith("/")) {
+                li.innerHTML = `<a onclick="listS3('${currentKey}${item}')">📁 ${item}</a>`;
+            } else if (lower.endsWith(".mp4") || lower.endsWith(".webm")) {
+                // link to viewer page with query params (URL-encoded)
+                const href = `viewer.html?bucket=${encodeURIComponent(document.getElementById("bucket").value)}&key=${encodeURIComponent(fullKey)}`;
+                li.innerHTML = `<a href="${href}">🎬 ${item}</a>`;
+            } else {
+                li.innerHTML = `📄 ${item}`;
+            }
+            ul.appendChild(li);
+        });
+    }
+
+    // Initial load
+    listS3();
+</script>
+</body>
+</html>
