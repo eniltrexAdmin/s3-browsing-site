@@ -32,12 +32,30 @@ variable "list_lambda_state_key" {
       description = "The path where the API GW state is"
 }
 
-data "terraform_remote_state" "lambda_1_remote_state" {
+variable "presign_lambda_state_bucket" {
+      description = "The bucket where the presign lambda  state is "
+}
+
+variable "presign_lambda_state_key" {
+      description = "The path where the presign lambda GW state is"
+}
+
+data "terraform_remote_state" "list_lambda_remote_state" {
       backend = "s3"
 
       config = {
             bucket         = var.list_lambda_state_bucket
             key            = var.list_lambda_state_key
+            region         = "eu-west-3"
+      }
+}
+
+data "terraform_remote_state" "presign_lambda_remote_state" {
+      backend = "s3"
+
+      config = {
+            bucket         = var.presign_lambda_state_bucket
+            key            = var.presign_lambda_state_key
             region         = "eu-west-3"
       }
 }
@@ -51,9 +69,15 @@ module "default-api-gw"  {
       route_53_id  = data.aws_route53_zone.default.id
       api_gw_key = var.be_api_key
       lambdas = [{
-            function_name = data.terraform_remote_state.lambda_1_remote_state.outputs.lambda_function_name
-            lambda_invoke_arn = data.terraform_remote_state.lambda_1_remote_state.outputs.lambda_invoke_arn
+            function_name = data.terraform_remote_state.list_lambda_remote_state.outputs.lambda_function_name
+            lambda_invoke_arn = data.terraform_remote_state.list_lambda_remote_state.outputs.lambda_invoke_arn
             endpoint_path = "list-s3"
+            http_method   = "GET"
+      },
+      {
+            function_name = data.terraform_remote_state.presign_lambda_remote_state.outputs.lambda_function_name
+            lambda_invoke_arn = data.terraform_remote_state.presign_lambda_remote_state.outputs.lambda_invoke_arn
+            endpoint_path = "presign"
             http_method   = "GET"
       }]
 }

@@ -40,6 +40,8 @@ jobs:
           TF_VAR_be_api_key: ${{ secrets.BE_API_KEY }}
           TF_VAR_list_lambda_state_bucket: ${{ secrets.TF_STATES_BUCKET }}
           TF_VAR_list_lambda_state_key: ${{ secrets.BUCKET_NAME}}-s3-browsing/list-lambda/terraform.tfstate
+          TF_VAR_presign_lambda_state_bucket: ${{ secrets.TF_STATES_BUCKET }}
+          TF_VAR_presign_lambda_state_key: ${{ secrets.BUCKET_NAME}}-s3-browsing/presign-lambda/terraform.tfstate
         run: |
           terraform init -backend-config="bucket=${{ secrets.TF_STATES_BUCKET }}" \
              -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/api-gw/terraform.tfstate" \
