@@ -1,10 +1,11 @@
 name: Apply terraform changes to PRODUCTION on GW
 on:
-  workflow_run:
-    workflows: ["deploy-list-lambda"]
-    types:
-      - completed
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/infra/production/**'
+      - '.github/workflows/deploy-backend-shared.yml'
 
 jobs:
   update-infra-production:
