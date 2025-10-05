@@ -11,7 +11,7 @@ jobs:
   build-go-project:
     runs-on: ubuntu-latest
     outputs:
-      artifact-name: pre-sign-url
+      artifact-name: presign-bootstrap
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -29,14 +29,14 @@ jobs:
 
       - name: Build Go executable
         working-directory: ./backend/list-s3-items
-        run:  GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ../../pre-sign-url
+        run:  GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ../../bootstrap
 
       - id: upload-artifact
         name: Upload executable as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: pre-sign-url
-          path: pre-sign-url
+          name: bootstrap
+          path: bootstrap
 
 
 
@@ -73,6 +73,7 @@ jobs:
         env:
           TF_VAR_bucket_name: ${{ secrets.BUCKET_NAME }}
         run: |
+          cp ../../../../bootstrap ../../bootstrap
           terraform init -backend-config="bucket=${{ secrets.TF_STATES_BUCKET }}" \
              -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/presign-lambda/terraform.tfstate" \
              -backend-config="region=eu-west-3"

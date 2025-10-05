@@ -23,7 +23,7 @@ variable "bucket_name" {
 module "presign-lambda" {
   source = "../../../infra/lambda-module"
   lambda_name = "${var.bucket_name}-presign-url"
-  lambda_file_full_path = "../../../../pre-sign-url"
+  lambda_file_full_path = "../../bootstrap"
   executable_file = "pre-sign-program"
   bucket_name = var.bucket_name
   lambda_env_variables = {
