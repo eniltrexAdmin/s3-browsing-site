@@ -23,7 +23,7 @@ variable "bucket_name" {
 module "s3-list-lambda" {
   source = "../../../infra/lambda-module"
   lambda_name = "${var.bucket_name}-s3-list-lambda"
-  lambda_file_full_path = "../../../../bootstrap"
+  lambda_file_full_path = "../../bootstrap"
   executable_file = "list-s3-program"
   bucket_name = var.bucket_name
   lambda_env_variables = {
