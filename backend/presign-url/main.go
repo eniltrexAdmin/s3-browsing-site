@@ -34,6 +34,8 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		return errorResponse(http.StatusBadRequest, "bucket and key query parameters are required"), nil
 	}
 
+	log.Printf("Lambda received input: bucket: %s, key: %s", bucket, key)
+
 	client := s3.NewFromConfig(cfg)
 	presigner := s3.NewPresignClient(client)
 
