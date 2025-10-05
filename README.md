@@ -15,9 +15,12 @@ deployed, but it assumes an static infra which is the existence of the API GW.
 Infra doesn't have "environments" it's all in production.
 
 
-FE pipeline is independent and I havet started yet.
-
 ![Architecture Diagram](architecture-1.png)
+
+
+## Missing stuff
+
+Adding a link to cloudfront distribution with my domain, but Ill do that later if ever
 
 
 ## DEcisions

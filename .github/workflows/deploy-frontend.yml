@@ -39,7 +39,7 @@ jobs:
           TF_VAR_basic_auth_pass: ${{ secrets.BASIC_AUTH_PASS }}
         run: |
           terraform init -backend-config="bucket=${{ secrets.TF_STATES_BUCKET }}" \
-             -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/frontend-infra/terraform.tfstate" \
+             -backend-config="key=${{ secrets.BUCKET_NAME}}-s3-browsing/frontend-infra/terraform.state" \
              -backend-config="region=eu-west-3"
           terraform plan -out=tfplan -input=false
           terraform apply  -input=false tfplan
