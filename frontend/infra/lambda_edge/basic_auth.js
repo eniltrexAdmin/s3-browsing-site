@@ -9,27 +9,22 @@ exports.handler = async (event) => {
     const expected = Buffer.from(`$${expectedUser}:$${expectedPass}`).toString('base64');
 
     const authHeader = headers.authorization && headers.authorization[0].value;
+    console.log("authHeader:", authHeader, "expected(prefix):", expected.slice(0,6));
 
-    if (!authHeader || authHeader !== `Basic ${expected}`) {
+    if (!authHeader || authHeader !== `Basic $${expected}`) {
         const body = 'Unauthorized';
+        console.log("unauthorized — returning 401");
 
         return {
             status: '401',
             statusDescription: 'Unauthorized',
             headers: {
-                'www-authenticate': [
-                    { key: 'www-authenticate', value: 'Basic realm="Restricted"' }
-                ],
-                'content-type': [
-                    { key: 'content-type', value: 'text/plain' }
-                ],
-                'content-length': [
-                    { key: 'content-length', value: body.length.toString() }
-                ]
+                'www-authenticate': [{ key: 'www-authenticate', value: 'Basic realm="Restricted"' }],
+                'content-type': [{ key: 'content-type', value: 'text/plain' }],
             },
-            body
+            body: 'Unauthorized'
         };
     }
-
+    console.log("authorized — forwarding request");
     return request;
 };

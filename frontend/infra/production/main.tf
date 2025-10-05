@@ -155,6 +155,7 @@ resource "aws_lambda_function" "basic_auth" {
 
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "${var.bucket_name}-oac"
+  description                       = "Access control for CloudFront to S3 bucket"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -222,4 +223,34 @@ resource "aws_cloudfront_cache_policy" "no_cache_html" {
 
 output "cloudfront_url" {
   value = aws_cloudfront_distribution.cdn.domain_name
+}
+
+# ──────────────────────────────────────────────
+# S3 bucket policy allowing CloudFront via OAC
+# ──────────────────────────────────────────────
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_s3_bucket_policy" "site_policy" {
+  bucket = aws_s3_bucket.site.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "AllowCloudFrontServicePrincipalReadOnly",
+        Effect    = "Allow",
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        },
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.site.arn}/*",
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.cdn.id}"
+          }
+        }
+      }
+    ]
+  })
 }
