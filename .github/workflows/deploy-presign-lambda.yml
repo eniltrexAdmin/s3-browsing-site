@@ -11,7 +11,7 @@ jobs:
   build-go-project:
     runs-on: ubuntu-latest
     outputs:
-      artifact-name: presign-bootstrap
+      artifact-name: bootstrap
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
