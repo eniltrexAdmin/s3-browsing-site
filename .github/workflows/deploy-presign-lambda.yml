@@ -28,7 +28,7 @@ jobs:
         run: go test
 
       - name: Build Go executable
-        working-directory: ./backend/list-s3-items
+        working-directory: ./backend/presign-url
         run:  GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ../../bootstrap
 
       - id: upload-artifact
