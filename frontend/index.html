@@ -66,7 +66,7 @@
 
             if (item.endsWith("/")) {
                 li.innerHTML = `<a onclick="listS3('${currentKey}${item}')">📁 ${item}</a>`;
-            } else if (lower.endsWith(".mp4") || lower.endsWith(".webm")  || lower.endsWith(".mov")) {
+            } else if (lower.endsWith(".mp4") || lower.endsWith(".webm")  || lower.endsWith(".mov") || lower.endsWith(".ogv")) {
                 // link to viewer page with query params (URL-encoded)
                 const href = `viewer.html?bucket=${encodeURIComponent(document.getElementById("bucket").value)}&key=${encodeURIComponent(fullKey)}`;
                 li.innerHTML = `<a href="${href}">🎬 ${item}</a>`;
