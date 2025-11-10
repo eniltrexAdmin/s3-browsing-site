@@ -59,7 +59,7 @@
         }
 
         const ext = extFromKey(key).toLowerCase();
-        if (!['mp4', 'webm', 'mov', 'ogv'].includes(ext)) {
+        if (!['mp4', 'webm', 'mov', 'ogv', 'wmv'].includes(ext)) {
             status.textContent = `Unsupported file type .${ext}. Only .mp4 or .webm supported.`;
             return;
         }
